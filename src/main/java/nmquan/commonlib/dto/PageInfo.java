@@ -6,14 +6,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Builder
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Response<T> {
-    private T data;
-    private String message;
-    @Builder.Default
-    private Integer code = 1000;
+public class PageInfo {
+    private Integer pageIndex;
+    private Integer pageSize;
+    private Long totalElements;
+    private Integer totalPages;
+    private Boolean hasNextPage;
 }

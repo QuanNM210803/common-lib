@@ -1,19 +1,19 @@
 package nmquan.commonlib.exception;
 
 import lombok.Getter;
+import nmquan.commonlib.constant.MessageConstants;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 
 @Getter
 public enum ErrorCode {
-    UNAUTHENTICATED(401, "Lỗi xác thực", HttpStatus.UNAUTHORIZED),
-    ACCESS_DENIED(403, "Quyền truy cập bị từ chối", HttpStatus.FORBIDDEN),
-    ERROR(500, "Đã xảy ra lỗi, vui lòng thử lại sau!", HttpStatus.INTERNAL_SERVER_ERROR),
-    INVALID_FORMAT(101, "Sai định dạng dữ liệu đầu vào", HttpStatus.BAD_REQUEST),
-
+    UNAUTHENTICATED(401, MessageConstants.UNAUTHENTICATED, HttpStatus.UNAUTHORIZED),
+    ACCESS_DENIED(403, MessageConstants.ACCESS_DENIED, HttpStatus.FORBIDDEN),
+    ERROR(500, MessageConstants.ERROR, HttpStatus.INTERNAL_SERVER_ERROR),
+    INVALID_FORMAT(101, MessageConstants.INVALID_FORMAT, HttpStatus.BAD_REQUEST),
+    DATA_NOT_FOUND(102, MessageConstants.DATA_NOTFOUND, HttpStatus.NOT_FOUND),
     ;
 
-    ErrorCode(Integer code, String message, HttpStatusCode statusCode) {
+    ErrorCode(Integer code, String message, HttpStatus statusCode) {
         this.code = code;
         this.message = message;
         this.statusCode = statusCode;
@@ -21,5 +21,5 @@ public enum ErrorCode {
 
     private final Integer code;
     private final String message;
-    private final HttpStatusCode statusCode;
+    private final HttpStatus statusCode;
 }

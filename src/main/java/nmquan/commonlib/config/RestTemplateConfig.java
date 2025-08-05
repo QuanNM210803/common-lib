@@ -1,5 +1,6 @@
 package nmquan.commonlib.config;
 
+import nmquan.commonlib.constant.CommonConstants;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -13,14 +14,14 @@ public class RestTemplateConfig {
     private String X_INTERNAL_TOKEN;
 
     @Bean
-    @Qualifier("internal")
+    @Qualifier(CommonConstants.INTERNAL)
     public RestTemplate restTemplate() {
         RestTemplate restTemplate = new RestTemplate();
 
         restTemplate.getInterceptors().add((request, body, execution) -> {
             HttpHeaders headers = request.getHeaders();
-            if (!headers.containsKey("X-Internal-Token")) {
-                headers.set("X-Internal-Token", X_INTERNAL_TOKEN);
+            if (!headers.containsKey(CommonConstants.X_INTERNAL_TOKEN)) {
+                headers.set(CommonConstants.X_INTERNAL_TOKEN, X_INTERNAL_TOKEN);
             }
             return execution.execute(request, body);
         });
@@ -29,7 +30,7 @@ public class RestTemplateConfig {
     }
 
     @Bean
-    @Qualifier("external")
+    @Qualifier(CommonConstants.EXTERNAL)
     public RestTemplate externalRestTemplate() {
         return new RestTemplate();
     }

@@ -15,6 +15,6 @@ public class AuditorAwareConfig implements AuditorAware<String> {
             UserCustom user = (UserCustom) authentication.getPrincipal();
             return Optional.of(user.getUsername());
         }
-        return Optional.of("anonymous");
+        return Optional.of("anonymousUser");
     }
 }
