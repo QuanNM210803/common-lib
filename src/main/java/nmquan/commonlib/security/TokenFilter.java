@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import nmquan.commonlib.model.UserCustom;
+import nmquan.commonlib.model.JwtUser;
 import nmquan.commonlib.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,13 +33,13 @@ public class TokenFilter extends OncePerRequestFilter {
         try{
             String jwt = JwtUtils.getToken(request);
             if(jwt != null){
-                UserCustom userCustom = JwtUtils.validate(jwt, SECRET_KEY);
-                userCustom.setPayload(null);
-                List<GrantedAuthority> authorities = userCustom.getRoles().stream()
+                JwtUser jwtUser = JwtUtils.validate(jwt, SECRET_KEY);
+                jwtUser.setPayload(null);
+                List<GrantedAuthority> authorities = jwtUser.getRoles().stream()
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-                var authentication = new UsernamePasswordAuthenticationToken(userCustom, null, authorities);
+                var authentication = new UsernamePasswordAuthenticationToken(jwtUser, null, authorities);
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }

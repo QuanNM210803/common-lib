@@ -1,15 +1,13 @@
-package nmquan.commonlib.base;
+package nmquan.commonlib.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import nmquan.commonlib.model.UserCustom;
 import org.springframework.data.annotation.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 @Data
 @MappedSuperclass

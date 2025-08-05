@@ -1,7 +1,7 @@
 package nmquan.commonlib.utils;
 
 import jakarta.servlet.http.HttpServletRequest;
-import nmquan.commonlib.model.UserCustom;
+import nmquan.commonlib.model.JwtUser;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,7 +17,7 @@ public class WebUtils {
         return ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
     }
 
-    public static UserCustom getCurrentUserCustom() {
+    public static JwtUser getCurrentUserCustom() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null
                 || !authentication.isAuthenticated()
@@ -26,8 +26,8 @@ public class WebUtils {
         }
 
         Object principal = authentication.getPrincipal();
-        if (principal instanceof UserCustom) {
-            return (UserCustom) principal;
+        if (principal instanceof JwtUser) {
+            return (JwtUser) principal;
         }
         return null;
     }

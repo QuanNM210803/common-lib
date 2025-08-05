@@ -6,7 +6,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
-import nmquan.commonlib.model.UserCustom;
+import nmquan.commonlib.model.JwtUser;
 import org.springframework.util.StringUtils;
 
 import java.security.Key;
@@ -25,7 +25,7 @@ public class JwtUtils {
         return headerAuth;
     }
 
-    public static UserCustom validate(String token, String secretKey) {
+    public static JwtUser validate(String token, String secretKey) {
         try{
             Claims claims = Jwts.parserBuilder()
                     .setSigningKey(getSignInKey(secretKey))
@@ -37,13 +37,13 @@ public class JwtUtils {
             String username = claims.getSubject();
             String email = claims.get("email", String.class);
             String fullName = claims.get("fullName", String.class);
-            return new UserCustom(userId, roles, email, fullName, claims, username, "", List.of());
+            return new JwtUser(userId, roles, email, fullName, claims, username, "", List.of());
         }catch (JwtException e) {
             throw new JwtException("Invalid JWT token" + e.getMessage());
         }
     }
 
-    private static Key getSignInKey(String secretKey) {
+    public static Key getSignInKey(String secretKey) {
         byte[] bytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(bytes);
     }

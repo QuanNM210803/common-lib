@@ -11,15 +11,15 @@ import java.util.List;
 
 @Getter
 @Setter
-public class UserCustom extends User {
+public class JwtUser extends User {
     private Long userId;
     private List<String> roles;
     private String email;
     private String fullName;
     private Claims payload;
 
-    public UserCustom(Long userId, List<String> roles, String email, String fullName, Claims payload,
-                      String username, String password, Collection<? extends GrantedAuthority> authorities) {
+    public JwtUser(Long userId, List<String> roles, String email, String fullName, Claims payload,
+                   String username, String password, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);
         this.userId = userId;
         this.roles = roles;
@@ -28,11 +28,11 @@ public class UserCustom extends User {
         this.payload = payload;
     }
 
-    public UserCustom(String username, String password, Collection<? extends GrantedAuthority> authorities) {
+    public JwtUser(String username, String password, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);
     }
 
-    public UserCustom(String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
+    public JwtUser(String username, String password, boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
     }
 }
