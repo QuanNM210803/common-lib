@@ -1,15 +1,17 @@
 package nmquan.commonlib.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import jakarta.persistence.Id;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.*;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serializable;
 import java.time.Instant;
 
-@Data
+@Getter
+@Setter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class BaseEntity implements Serializable {

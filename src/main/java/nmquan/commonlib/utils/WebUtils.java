@@ -1,7 +1,6 @@
 package nmquan.commonlib.utils;
 
 import jakarta.servlet.http.HttpServletRequest;
-import nmquan.commonlib.model.JwtUser;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,6 +9,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class WebUtils {
@@ -17,19 +17,35 @@ public class WebUtils {
         return ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
     }
 
-    public static JwtUser getCurrentUserCustom() {
+    public static Map<String, Object> getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null
-                || !authentication.isAuthenticated()
-                || "anonymousUser".equals(authentication.getPrincipal())) {
+        if (authentication == null || !authentication.isAuthenticated()) {
             return null;
         }
+        return (Map<String, Object>) authentication.getPrincipal();
+    }
 
-        Object principal = authentication.getPrincipal();
-        if (principal instanceof JwtUser) {
-            return (JwtUser) principal;
+    public static String getCurrentUsername() {
+        Object username = Objects.requireNonNull(getCurrentUser()).get("username");
+        return username == null ? null : username.toString();
+    }
+
+    public static Long getCurrentUserId() {
+        Object id = Objects.requireNonNull(getCurrentUser()).get("userId");
+        if (id == null) {
+            id = getCurrentUser().get("id");
         }
-        return null;
+        return id == null ? null : Long.parseLong(id.toString());
+    }
+
+    public static String getCurrentEmail() {
+        Object email = Objects.requireNonNull(getCurrentUser()).get("email");
+        return email == null ? null : email.toString();
+    }
+
+    public static String getCurrentFullName() {
+        Object fullName = Objects.requireNonNull(getCurrentUser()).get("fullName");
+        return fullName == null ? null : fullName.toString();
     }
 
     public static List<String> getCurrentRole(){

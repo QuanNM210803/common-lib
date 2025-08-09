@@ -11,13 +11,14 @@ public class AppException extends RuntimeException {
     private Object[] params;
 
     // for error from service other
-    private Response<?> response;
+    private Response<Object> response;
     private Integer statusCode;
 
-    public AppException(Response<Object> response, Integer statusCode) {
+    public AppException(Response<Object> response, Integer statusCode, Object... params) {
         super(response.getMessage());
         this.response = response;
         this.statusCode = statusCode;
+        this.params = params;
     }
     public AppException(ErrorCode errorCode, Object... params) {
         super(errorCode.getMessage());

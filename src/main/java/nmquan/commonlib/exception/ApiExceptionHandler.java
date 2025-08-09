@@ -31,15 +31,11 @@ public class ApiExceptionHandler {
 
         // for error from service other
         if(errorCode == null) {
-            Response<Object> responseError = (Response<Object>) appException.getResponse();
+            Response<Object> responseError = appException.getResponse();
+            responseError.setMessage(this.formatMessage(responseError.getMessage(), appException.getParams()));
             return ResponseEntity.status(appException.getStatusCode()).body(responseError);
         }
-        String message = errorCode.getMessage();
-        try {
-            message = localizationUtils.getLocalizedMessage(errorCode.getMessage(), appException.getParams());
-        }catch (Exception e){
-
-        }
+        String message = this.formatMessage(errorCode.getMessage(), appException.getParams());
         return ResponseUtils.error(errorCode.getStatusCode(), message, errorCode.getCode());
     }
 
@@ -49,7 +45,7 @@ public class ApiExceptionHandler {
     protected ResponseEntity<Response<Object>> handleValidationException(MethodArgumentNotValidException ex) {
         log.error("Validate error: {}", ex.getMessage(), ex);
         String message = ex.getBindingResult().getAllErrors().get(0).getDefaultMessage();
-        ErrorCode errorCode = ErrorCode.INVALID_FORMAT;
+        CommonErrorCode errorCode = CommonErrorCode.INVALID_FORMAT;
 
         //handle PARAM parse error (for param)
         String[] errorCodes = ex.getBindingResult().getAllErrors().get(0).getCodes();
@@ -57,12 +53,8 @@ public class ApiExceptionHandler {
             message = errorCode.getMessage();
         }
 
-        try {
-            message = localizationUtils.getLocalizedMessage(message);
-        }catch (Exception e){
-
-        }
-        return ResponseUtils.error(HttpStatus.BAD_REQUEST, message, errorCode.getCode());
+        message = this.formatMessage(message);
+        return ResponseUtils.error(errorCode.getStatusCode(), message, errorCode.getCode());
     }
 
     // authorization
@@ -70,14 +62,9 @@ public class ApiExceptionHandler {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ResponseEntity<Response<Object>> handleAccessDeniedException(AccessDeniedException ex) {
         log.error("AccessDeniedException: {}", ex.getMessage(), ex);
-        ErrorCode errorCode=ErrorCode.ACCESS_DENIED;
-        String message = errorCode.getMessage();
-        try {
-            message = localizationUtils.getLocalizedMessage(message);
-        }catch (Exception e){
-
-        }
-        return ResponseUtils.error(HttpStatus.FORBIDDEN, message, errorCode.getCode());
+        CommonErrorCode errorCode= CommonErrorCode.ACCESS_DENIED;
+        String message = this.formatMessage(errorCode.getMessage());
+        return ResponseUtils.error(errorCode.getStatusCode(), message, errorCode.getCode());
     }
 
     // JSON parse error (for request body)
@@ -85,28 +72,26 @@ public class ApiExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<Response<Object>> handleInvalidFormatException(Exception ex) {
         log.error("JSON parse error: {}", ex.getMessage(), ex);
-        ErrorCode errorCode=ErrorCode.INVALID_FORMAT;
-        String message = errorCode.getMessage();
-        try {
-            message = localizationUtils.getLocalizedMessage(message);
-        }catch (Exception e){
-
-        }
-        return ResponseUtils.error(HttpStatus.BAD_REQUEST, message, errorCode.getCode());
+        CommonErrorCode errorCode= CommonErrorCode.INVALID_FORMAT;
+        String message = this.formatMessage(errorCode.getMessage());
+        return ResponseUtils.error(errorCode.getStatusCode(), message, errorCode.getCode());
     }
 
     @ExceptionHandler({RuntimeException.class, Exception.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ResponseEntity<Response<Object>> handleException(Exception ex) {
         log.error("Exception: {}", ex.getMessage(), ex);
-        ErrorCode errorCode=ErrorCode.ERROR;
-        String message = errorCode.getMessage();
+        CommonErrorCode errorCode= CommonErrorCode.ERROR;
+        String message = this.formatMessage(errorCode.getMessage());
+        return ResponseUtils.error(errorCode.getStatusCode(), message, errorCode.getCode());
+    }
+
+    private String formatMessage(String message, Object... params) {
         try {
-            message = localizationUtils.getLocalizedMessage(message);
+            message = localizationUtils.getLocalizedMessage(message, params);
         }catch (Exception e){
 
         }
-        return ResponseUtils.error(HttpStatus.INTERNAL_SERVER_ERROR, message, errorCode.getCode());
+        return message;
     }
-
 }

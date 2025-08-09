@@ -10,22 +10,18 @@ import nmquan.commonlib.model.JwtUser;
 import nmquan.commonlib.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class TokenFilter extends OncePerRequestFilter {
-    @Value("${jwt.secretKey}")
+    @Value("${jwt.secret-key}")
     private String SECRET_KEY;
 
     @Override
@@ -34,12 +30,7 @@ public class TokenFilter extends OncePerRequestFilter {
             String jwt = JwtUtils.getToken(request);
             if(jwt != null){
                 JwtUser jwtUser = JwtUtils.validate(jwt, SECRET_KEY);
-                jwtUser.setPayload(null);
-                List<GrantedAuthority> authorities = jwtUser.getRoles().stream()
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList());
-
-                var authentication = new UsernamePasswordAuthenticationToken(jwtUser, null, authorities);
+                var authentication = new UsernamePasswordAuthenticationToken(jwtUser.getUser(), jwtUser.getUsername(), jwtUser.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }

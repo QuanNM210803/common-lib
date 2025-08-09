@@ -2,7 +2,7 @@ package nmquan.commonlib.annotation;
 
 import nmquan.commonlib.constant.CommonConstants;
 import nmquan.commonlib.exception.AppException;
-import nmquan.commonlib.exception.ErrorCode;
+import nmquan.commonlib.exception.CommonErrorCode;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -21,11 +21,11 @@ public class InternalRequestAspect {
     public Object handleInternalApi(ProceedingJoinPoint joinPoint) throws Throwable {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (attributes == null) {
-            throw new AppException(ErrorCode.UNAUTHENTICATED);
+            throw new AppException(CommonErrorCode.UNAUTHENTICATED);
         }
         String xInternalToken = attributes.getRequest().getHeader(CommonConstants.X_INTERNAL_TOKEN);
         if (xInternalToken == null || !xInternalToken.equals(X_INTERNAL_TOKEN)) {
-            throw new AppException(ErrorCode.UNAUTHENTICATED);
+            throw new AppException(CommonErrorCode.UNAUTHENTICATED);
         }
         return joinPoint.proceed();
     }

@@ -6,6 +6,7 @@ import lombok.SneakyThrows;
 import nmquan.commonlib.dto.response.Response;
 import nmquan.commonlib.exception.AppException;
 import nmquan.commonlib.utils.ObjectMapperUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -15,10 +16,10 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Objects;
 
 @Service
-@RequiredArgsConstructor
 public class RestTemplateService {
+    @Autowired
     @Qualifier("internal")
-    private final RestTemplate restTemplate;
+    private RestTemplate restTemplate;
 
     /**
      * Generic GET method using RestTemplate.

@@ -6,11 +6,17 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
+import nmquan.commonlib.exception.AppException;
+import nmquan.commonlib.exception.CommonErrorCode;
 import nmquan.commonlib.model.JwtUser;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.util.StringUtils;
 
 import java.security.Key;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class JwtUtils {
     public static String getToken(HttpServletRequest request) {
@@ -32,14 +38,18 @@ public class JwtUtils {
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-            Long userId = Long.valueOf(claims.get("userId", Integer.class));
-            List<String> roles = claims.get("roles", List.class);
             String username = claims.getSubject();
-            String email = claims.get("email", String.class);
-            String fullName = claims.get("fullName", String.class);
-            return new JwtUser(userId, roles, email, fullName, claims, username, "", List.of());
+            List<String> roles = claims.get("roles", List.class);
+            List<GrantedAuthority> authorities = roles == null ? null : roles.stream()
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList());
+
+            String user = claims.get("user", String.class);
+            Map<String, Object> userObj = user == null ? null : ObjectMapperUtils.convertToMap(user);
+
+            return new JwtUser(userObj, username, "", authorities);
         }catch (JwtException e) {
-            throw new JwtException("Invalid JWT token" + e.getMessage());
+            throw new AppException(CommonErrorCode.UNAUTHENTICATED);
         }
     }
 
