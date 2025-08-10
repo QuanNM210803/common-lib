@@ -16,9 +16,11 @@ public class ObjectMapperUtils {
     private static final ObjectMapper mapper = new ObjectMapper();
 
     static {
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         mapper.registerModule(new JavaTimeModule());
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mapper.configure(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS, true);
+        mapper.configure(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE, false);
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
     }
 
@@ -46,6 +48,13 @@ public class ObjectMapperUtils {
         }
     }
 
+    public static <T> T convertToObject(Object source, Class<T> clazz) {
+        try {
+            return mapper.convertValue(source, clazz);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     public static Map<String, Object> convertToMap(String json) {
         try {

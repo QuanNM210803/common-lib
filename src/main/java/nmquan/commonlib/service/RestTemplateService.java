@@ -1,7 +1,6 @@
 package nmquan.commonlib.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import nmquan.commonlib.dto.response.Response;
 import nmquan.commonlib.exception.AppException;
@@ -24,7 +23,7 @@ public class RestTemplateService {
     /**
      * Generic GET method using RestTemplate.
      * @param url      URL endpoint to call, có thể có biến đường dẫn (ví dụ: "/api/users/{id}")
-     * @param typeRef  Kiểu dữ liệu mong muốn nhận về, được bao trong Response<T>
+     * @param typeRef  ParameterizedTypeReference để chỉ định kiểu dữ liệu trả về (ví dụ: Response<User>)
      * @param params   Các tham số URL (path variables hoặc query params nếu cần)
      * @return         Đối tượng Response<T> đã được deserialize từ response của API
      */
@@ -53,15 +52,15 @@ public class RestTemplateService {
     /**
      * Generic POST method using RestTemplate.
      * @param url      URL endpoint to call, có thể có biến đường dẫn (ví dụ: "/api/users/{id}")
+     * @param typeRef  ParameterizedTypeReference để chỉ định kiểu dữ liệu trả về (ví dụ: Response<User>)
      * @param request  Dữ liệu gửi đi (request body)
-     * @param typeRef  Kiểu dữ liệu mong muốn nhận về, được bao trong Response<T>
      * @param params   Các tham số đường dẫn (nếu có)
      * @return         Đối tượng Response<T> đã được deserialize từ response của API
      */
     public <T, G> Response<T> postMethodRestTemplate(
             String url,
-            G request,
             ParameterizedTypeReference<Response<T>> typeRef,
+            G request,
             Object... params
     ) {
         try {

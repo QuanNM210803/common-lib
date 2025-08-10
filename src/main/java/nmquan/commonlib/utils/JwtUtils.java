@@ -14,6 +14,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.util.StringUtils;
 
 import java.security.Key;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -40,7 +41,7 @@ public class JwtUtils {
                     .getBody();
             String username = claims.getSubject();
             List<String> roles = claims.get("roles", List.class);
-            List<GrantedAuthority> authorities = roles == null ? null : roles.stream()
+            List<GrantedAuthority> authorities = roles == null ? Collections.emptyList() : roles.stream()
                     .map(SimpleGrantedAuthority::new)
                     .collect(Collectors.toList());
 

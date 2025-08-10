@@ -19,33 +19,31 @@ public class WebUtils {
 
     public static Map<String, Object> getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !authentication.isAuthenticated()) {
+        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal().equals("anonymousUser")) {
             return null;
         }
         return (Map<String, Object>) authentication.getPrincipal();
     }
 
     public static String getCurrentUsername() {
-        Object username = Objects.requireNonNull(getCurrentUser()).get("username");
-        return username == null ? null : username.toString();
+        Map<String, Object> currentUser = getCurrentUser();
+        return currentUser != null ? (String) currentUser.get("username") : null;
     }
 
     public static Long getCurrentUserId() {
-        Object id = Objects.requireNonNull(getCurrentUser()).get("userId");
-        if (id == null) {
-            id = getCurrentUser().get("id");
-        }
-        return id == null ? null : Long.parseLong(id.toString());
+        Map<String, Object> currentUser = getCurrentUser();
+        Object id = currentUser != null ? currentUser.get("id") : null;
+        return id != null ? Long.valueOf(id.toString()) : null;
     }
 
     public static String getCurrentEmail() {
-        Object email = Objects.requireNonNull(getCurrentUser()).get("email");
-        return email == null ? null : email.toString();
+        Map<String, Object> currentUser = getCurrentUser();
+        return currentUser != null ? (String) currentUser.get("email") : null;
     }
 
     public static String getCurrentFullName() {
-        Object fullName = Objects.requireNonNull(getCurrentUser()).get("fullName");
-        return fullName == null ? null : fullName.toString();
+        Map<String, Object> currentUser = getCurrentUser();
+        return currentUser != null ? (String) currentUser.get("fullName") : null;
     }
 
     public static List<String> getCurrentRole(){
