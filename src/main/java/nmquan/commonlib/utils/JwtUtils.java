@@ -1,6 +1,7 @@
 package nmquan.commonlib.utils;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -49,8 +50,12 @@ public class JwtUtils {
             Map<String, Object> userObj = user == null ? null : ObjectMapperUtils.convertToMap(user);
 
             return new JwtUser(userObj, username, "", authorities);
+        }catch (ExpiredJwtException e) {
+            throw new AppException(CommonErrorCode.TOKEN_EXPIRED);
         }catch (JwtException e) {
-            throw new AppException(CommonErrorCode.UNAUTHENTICATED);
+            throw new AppException(CommonErrorCode.TOKEN_INVALID);
+        }catch (Exception e) {
+            throw new AppException(CommonErrorCode.ERROR);
         }
     }
 
