@@ -9,6 +9,8 @@ public class MessageConstants {
     public static final String ACCESS_DENIED= "access.denied";
     public static final String INVALID_FORMAT= "invalid.format";
     public static final String DATA_NOTFOUND="data.notfound";
+    public static final String TOKEN_EXPIRED="token.expired";
+    public static final String TOKEN_INVALID="token.invalid";
 
     public static final String DELETE_FAIL="delete.fail";
     public static final String CREATE_FAIL="create.fail";
