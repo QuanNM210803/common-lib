@@ -41,9 +41,10 @@ public class JwtUtils {
                     .parseClaimsJws(token)
                     .getBody();
             String username = claims.getSubject();
-            List<String> roles = claims.get("roles", List.class);
-            List<GrantedAuthority> authorities = roles == null ? Collections.emptyList() : roles.stream()
-                    .map(SimpleGrantedAuthority::new)
+            Map<String, List<String>> permissionMap = claims.get("permissions", Map.class);
+            List<GrantedAuthority> authorities = permissionMap == null ? Collections.emptyList() : permissionMap.entrySet().stream()
+                    .flatMap(entry -> entry.getValue().stream()
+                        .map(value -> new SimpleGrantedAuthority(entry.getKey() + ":" + value)))
                     .collect(Collectors.toList());
 
             String user = claims.get("user", String.class);
