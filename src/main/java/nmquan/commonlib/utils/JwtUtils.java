@@ -15,6 +15,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.util.StringUtils;
 
 import java.security.Key;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -41,11 +42,19 @@ public class JwtUtils {
                     .parseClaimsJws(token)
                     .getBody();
             String username = claims.getSubject();
+            List<String> roles = claims.get("roles", List.class);
+            List<GrantedAuthority> roleAuthorities = roles == null ? Collections.emptyList() : roles.stream()
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList());
+
             Map<String, List<String>> permissionMap = claims.get("permissions", Map.class);
-            List<GrantedAuthority> authorities = permissionMap == null ? Collections.emptyList() : permissionMap.entrySet().stream()
+            List<GrantedAuthority> permissionAuthorities = permissionMap == null ? Collections.emptyList() : permissionMap.entrySet().stream()
                     .flatMap(entry -> entry.getValue().stream()
                         .map(value -> new SimpleGrantedAuthority(entry.getKey() + ":" + value)))
                     .collect(Collectors.toList());
+
+            List<GrantedAuthority> authorities = new ArrayList<>(roleAuthorities);
+            authorities.addAll(permissionAuthorities);
 
             String user = claims.get("user", String.class);
             Map<String, Object> userObj = user == null ? null : ObjectMapperUtils.convertToMap(user);
