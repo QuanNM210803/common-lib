@@ -13,8 +13,7 @@ public class RestTemplateConfig {
     @Value("${jwt.x-internal-token}")
     private String X_INTERNAL_TOKEN;
 
-    @Bean
-    @Qualifier(CommonConstants.INTERNAL)
+    @Bean(name = CommonConstants.INTERNAL)
     public RestTemplate restTemplate() {
         RestTemplate restTemplate = new RestTemplate();
 
@@ -29,8 +28,7 @@ public class RestTemplateConfig {
         return restTemplate;
     }
 
-    @Bean
-    @Qualifier(CommonConstants.EXTERNAL)
+    @Bean(name = CommonConstants.EXTERNAL)
     public RestTemplate externalRestTemplate() {
         return new RestTemplate();
     }
