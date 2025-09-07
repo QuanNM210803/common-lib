@@ -2,22 +2,27 @@ package nmquan.commonlib.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.SneakyThrows;
+import nmquan.commonlib.constant.CommonConstants;
 import nmquan.commonlib.dto.response.Response;
 import nmquan.commonlib.exception.AppException;
 import nmquan.commonlib.utils.ObjectMapperUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Objects;
 
 @Service
 public class RestTemplateService {
     @Autowired
-    @Qualifier("internal")
+    @Qualifier(CommonConstants.INTERNAL)
     private RestTemplate restTemplate;
 
     /**
@@ -67,6 +72,49 @@ public class RestTemplateService {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<G> entity = new HttpEntity<>(request, headers);
+            ResponseEntity<Response<T>> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.POST,
+                    entity,
+                    typeRef,
+                    params
+            );
+            return Objects.requireNonNull(response.getBody());
+        } catch (Exception exception) {
+            this.throwException(exception.getMessage());
+            return null;
+        }
+    }
+
+    /*
+    * Generic file upload method using RestTemplate.
+    * @param url      URL endpoint to call, có thể có biến đường dẫn (ví dụ: "/api/users/{id}")
+    * @param typeRef  ParameterizedTypeReference để chỉ định kiểu dữ liệu trả về (ví dụ: Response<User>)
+    * @param file     Tệp tin cần upload
+    * @param params   Các tham số đường dẫn (nếu có)
+    * @return         Đối tượng Response<T> đã được deserialize từ response của API
+    * */
+    public <T> Response<T> uploadFile(
+            String url,
+            ParameterizedTypeReference<Response<T>> typeRef,
+            MultipartFile file,
+            Object... params
+    ) {
+        try {
+            ByteArrayResource fileAsResource = new ByteArrayResource(file.getBytes()) {
+                @Override
+                public String getFilename() {
+                    return file.getOriginalFilename();
+                }
+            };
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+            MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+            body.add("file", fileAsResource);
+
+            HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<>(body, headers);
             ResponseEntity<Response<T>> response = restTemplate.exchange(
                     url,
                     HttpMethod.POST,
