@@ -6,7 +6,9 @@ public class CommonConstants {
     public static final String FILE_ZIP = ".zip";
     public static final Integer DEFAULT_PAGE_INDEX = 0;
     public static final Integer DEFAULT_PAGE_SIZE = 10;
-    public static final String DEFAULT_SORT_BY = "updatedBy";
+    public static final String DEFAULT_SORT_BY = "updatedAt";
+    public static final String DEFAULT_SORT_DIRECTION = "DESC";
+    public static final String FALLBACK_SORT_BY = "createdAt";
     public static final String X_INTERNAL_TOKEN = "X-Internal-Token";
     public static final String INTERNAL = "internal";
     public static final String EXTERNAL = "external";

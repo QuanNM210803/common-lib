@@ -86,14 +86,14 @@ public class RestTemplateService {
         }
     }
 
-    /*
+    /**
     * Generic file upload method using RestTemplate.
     * @param url      URL endpoint to call, có thể có biến đường dẫn (ví dụ: "/api/users/{id}")
     * @param typeRef  ParameterizedTypeReference để chỉ định kiểu dữ liệu trả về (ví dụ: Response<User>)
     * @param file     Tệp tin cần upload
     * @param params   Các tham số đường dẫn (nếu có)
     * @return         Đối tượng Response<T> đã được deserialize từ response của API
-    * */
+    */
     public <T> Response<T> uploadFile(
             String url,
             ParameterizedTypeReference<Response<T>> typeRef,
