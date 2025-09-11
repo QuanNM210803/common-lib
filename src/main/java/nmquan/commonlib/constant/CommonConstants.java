@@ -9,7 +9,7 @@ public class CommonConstants {
     public static final String DEFAULT_SORT_BY = "updatedAt";
     public static final String DEFAULT_SORT_DIRECTION = "DESC";
     public static final String FALLBACK_SORT_BY = "createdAt";
-    public static final String X_INTERNAL_TOKEN = "X-Internal-Token";
+    public static final String ROLE_INTERNAL = "INTERNAL";
     public static final String INTERNAL = "internal";
     public static final String EXTERNAL = "external";
 

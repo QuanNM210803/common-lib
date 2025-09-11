@@ -1,12 +1,10 @@
 package nmquan.commonlib.utils;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
+import nmquan.commonlib.constant.CommonConstants;
 import nmquan.commonlib.exception.AppException;
 import nmquan.commonlib.exception.CommonErrorCode;
 import nmquan.commonlib.model.JwtUser;
@@ -15,13 +13,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.util.StringUtils;
 
 import java.security.Key;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class JwtUtils {
+
     public static String getToken(HttpServletRequest request) {
         String headerAuth = (request.getHeader("Authorization") == null || request.getHeader("Authorization").isEmpty())
                 ? request.getParameter("token") : request.getHeader("Authorization");
@@ -31,7 +27,7 @@ public class JwtUtils {
         if (headerAuth.startsWith("Bearer ")) {
             return headerAuth.substring(7);
         }
-        return headerAuth;
+        return null;
     }
 
     public static JwtUser validate(String token, String secretKey) {
@@ -72,5 +68,21 @@ public class JwtUtils {
     public static Key getSignInKey(String secretKey) {
         byte[] bytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(bytes);
+    }
+
+    public static String generateTokenInternal(String secretKey) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("roles", List.of(CommonConstants.ROLE_INTERNAL));
+        try {
+            return Jwts.builder()
+                    .setClaims(claims)
+                    .setSubject(CommonConstants.INTERNAL)
+                    .setExpiration(new Date(System.currentTimeMillis() + 30 * 1000L))
+                    .signWith(getSignInKey(secretKey), SignatureAlgorithm.HS256)
+                    .compact();
+        }
+        catch (Exception e) {
+            throw new AppException(CommonErrorCode.ERROR);
+        }
     }
 }
