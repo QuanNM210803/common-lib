@@ -1,7 +1,7 @@
 package nmquan.commonlib.config;
 
 import nmquan.commonlib.constant.CommonConstants;
-import org.springframework.beans.factory.annotation.Qualifier;
+import nmquan.commonlib.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,8 +10,8 @@ import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class RestTemplateConfig {
-    @Value("${jwt.x-internal-token}")
-    private String X_INTERNAL_TOKEN;
+    @Value("${jwt.secret-internal}")
+    private String SECRET_INTERNAL_KEY;
 
     @Bean(name = CommonConstants.INTERNAL)
     public RestTemplate restTemplate() {
@@ -19,9 +19,8 @@ public class RestTemplateConfig {
 
         restTemplate.getInterceptors().add((request, body, execution) -> {
             HttpHeaders headers = request.getHeaders();
-            if (!headers.containsKey(CommonConstants.X_INTERNAL_TOKEN)) {
-                headers.set(CommonConstants.X_INTERNAL_TOKEN, X_INTERNAL_TOKEN);
-            }
+            String tokenInternal = JwtUtils.generateTokenInternal(SECRET_INTERNAL_KEY);
+            headers.set("Authorization", tokenInternal);
             return execution.execute(request, body);
         });
 
