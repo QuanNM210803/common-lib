@@ -57,4 +57,17 @@ public class PageUtils {
                         .build())
                 .build();
     }
+
+    public static <T> FilterResponse<T> toFilterResponse(Page<?> page, List<T> data) {
+        return FilterResponse.<T>builder()
+                .data(data)
+                .pageInfo(PageInfo.builder()
+                        .pageIndex(page.getNumber())
+                        .pageSize(page.getSize())
+                        .totalElements(page.getTotalElements())
+                        .totalPages(page.getTotalPages())
+                        .hasNextPage(page.hasNext())
+                        .build())
+                .build();
+    }
 }
