@@ -25,7 +25,7 @@ public class InternalRequestAspect {
     private String SECRET_INTERNAL_KEY;
 
     @Around("@annotation(nmquan.commonlib.annotation.InternalRequest)")
-    public Object handleInternalApi(ProceedingJoinPoint joinPoint) throws Throwable {
+    public Object handleInternalRequest(ProceedingJoinPoint joinPoint) throws Throwable {
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         if (attributes == null) {
             throw new AppException(CommonErrorCode.UNAUTHENTICATED);

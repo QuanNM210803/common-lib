@@ -73,10 +73,17 @@ public class JwtUtils {
     public static String generateTokenInternal(String secretKey) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("roles", List.of(CommonConstants.ROLE_INTERNAL));
+
+        Long id = WebUtils.getCurrentUserId();
+        String username = WebUtils.getCurrentUsername() != null ? WebUtils.getCurrentUsername() : CommonConstants.INTERNAL;
+        Map<String, Object> userDto = new HashMap<>();
+        userDto.put("id", id);
+        userDto.put("username", username);
+        claims.put("user", ObjectMapperUtils.convertToJson(userDto));
         try {
             return Jwts.builder()
                     .setClaims(claims)
-                    .setSubject(CommonConstants.INTERNAL)
+                    .setSubject(username)
                     .setExpiration(new Date(System.currentTimeMillis() + 30 * 1000L))
                     .signWith(getSignInKey(secretKey), SignatureAlgorithm.HS256)
                     .compact();
