@@ -56,6 +56,14 @@ public class ObjectMapperUtils {
         }
     }
 
+    public static <T> List<T> convertToList(Object source, Class<T> clazz) {
+        try {
+            return mapper.convertValue(source, mapper.getTypeFactory().constructCollectionType(List.class, clazz));
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     public static Map<String, Object> convertToMap(String json) {
         try {
             return mapper.readValue(json, new TypeReference<Map<String, Object>>() {});
