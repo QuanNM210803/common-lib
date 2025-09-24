@@ -2,8 +2,9 @@ package nmquan.commonlib.constant;
 
 public class CommonConstants {
 
-    public static final String FILE_XLSX = ".xlsx";
-    public static final String FILE_ZIP = ".zip";
+    public static final String EXTENSION_XLSX = ".xlsx";
+    public static final String EXTENSION_ZIP = ".zip";
+    public static final String MAP_DATA_KEY = "data";
     public static final Integer DEFAULT_PAGE_INDEX = 0;
     public static final Integer DEFAULT_PAGE_SIZE = 10;
     public static final String DEFAULT_SORT_BY = "updatedAt";
