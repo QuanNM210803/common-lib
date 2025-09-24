@@ -11,6 +11,8 @@ public class MessageConstants {
     public static final String DATA_NOTFOUND="data.notfound";
     public static final String TOKEN_EXPIRED="token.expired";
     public static final String TOKEN_INVALID="token.invalid";
+    public static final String EXPORT_FAIL="export.fail";
+    public static final String FILE_TEMPLATE_NOT_FOUND="file.template.notfound";
 
     public static final String DELETE_FAIL="delete.fail";
     public static final String CREATE_FAIL="create.fail";

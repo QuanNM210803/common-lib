@@ -57,4 +57,10 @@ public class WebUtils {
                 .toList();
     }
 
+    public static Long getCurrentOrgId() {
+        Map<String, Object> currentUser = getCurrentUser();
+        Object orgId = currentUser != null ? currentUser.get("orgId") : null;
+        return orgId != null ? Long.valueOf(orgId.toString()) : null;
+    }
+
 }

@@ -76,9 +76,12 @@ public class JwtUtils {
 
         Long id = WebUtils.getCurrentUserId();
         String username = WebUtils.getCurrentUsername() != null ? WebUtils.getCurrentUsername() : CommonConstants.INTERNAL;
+        Long orgId = WebUtils.getCurrentOrgId();
+
         Map<String, Object> userDto = new HashMap<>();
         userDto.put("id", id);
         userDto.put("username", username);
+        userDto.put("orgId", orgId);
         claims.put("user", ObjectMapperUtils.convertToJson(userDto));
         try {
             return Jwts.builder()
