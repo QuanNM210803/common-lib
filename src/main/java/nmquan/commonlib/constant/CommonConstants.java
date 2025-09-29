@@ -1,5 +1,7 @@
 package nmquan.commonlib.constant;
 
+import java.time.ZoneId;
+
 public class CommonConstants {
 
     public static final String EXTENSION_XLSX = ".xlsx";
@@ -57,5 +59,12 @@ public class CommonConstants {
         public static final String NUMBER = "^[0-9]*";
         public static final String TEXT_NUMBER = "^[a-zA-Z0-9_]*";
         public static final String EMAIL = "^(?=.{3,64}@)[A-Za-z0-9_]+(\\.[A-Za-z0-9_]+)*@[^-][A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+    }
+
+    public static class ZONE {
+        private ZONE() {
+        }
+        public static final ZoneId HCM = ZoneId.of("Asia/Ho_Chi_Minh");
+        public static final ZoneId UTC = ZoneId.of("UTC");
     }
 }

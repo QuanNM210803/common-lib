@@ -61,4 +61,16 @@ public class DateUtils {
         return localDateTime.atZone(ZoneOffset.UTC).toInstant();
     }
 
+    /**
+     * Lấy thời điểm kết thúc ngày (23:59:59.999...) của một Instant theo múi giờ truyền vào
+     * @param instant Instant cần lấy thời điểm kết thúc ngày
+     * @param zone Múi giờ để xác định ngày (ví dụ ZoneId.of("Asia/Ho_Chi_Minh") hoặc ZoneOffset.UTC)
+     * @return Instant tại thời điểm kết thúc ngày theo múi giờ truyền vào
+     */
+    public static Instant endOfDay(Instant instant, ZoneId zone) {
+        LocalDate date = instant.atZone(zone).toLocalDate();
+        LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
+        return endOfDay.atZone(zone).toInstant();
+    }
+
 }
