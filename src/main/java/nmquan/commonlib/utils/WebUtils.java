@@ -1,16 +1,20 @@
 package nmquan.commonlib.utils;
 
 import jakarta.servlet.http.HttpServletRequest;
+import nmquan.commonlib.dto.BaseDto;
+import nmquan.commonlib.dto.Identifiable;
+import nmquan.commonlib.dto.response.FilterResponse;
+import nmquan.commonlib.exception.AppException;
+import nmquan.commonlib.exception.CommonErrorCode;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.time.Instant;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class WebUtils {
     public static HttpServletRequest getCurrentRequest() {
@@ -61,6 +65,60 @@ public class WebUtils {
         Map<String, Object> currentUser = getCurrentUser();
         Object orgId = currentUser != null ? currentUser.get("orgId") : null;
         return orgId != null ? Long.valueOf(orgId.toString()) : null;
+    }
+
+    public static Long checkCurrentOrgId(){
+        Long orgId = WebUtils.getCurrentOrgId();
+        if(Objects.isNull(orgId)){
+            throw new AppException(CommonErrorCode.ACCESS_DENIED);
+        }
+        return orgId;
+    }
+
+    public static <T extends Identifiable,G extends Identifiable> List<Long> getDeleteIds(List<T> newObjects, List<G> oldObjects){
+        if(Objects.isNull(newObjects)){
+            newObjects = new ArrayList<>();
+        }
+        if(Objects.isNull(oldObjects)){
+            oldObjects = new ArrayList<>();
+        }
+        List<Long> idsInNew = newObjects.stream()
+                .map(T::getId)
+                .filter(Objects::nonNull)
+                .toList();
+        return oldObjects.stream()
+                .map(G::getId)
+                .filter(id -> !idsInNew.contains(id))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+
+    public static <T extends BaseDto<Instant>> List<T> configResponsePublic(List<T> dtos){
+        if(Objects.nonNull(dtos)){
+            for(T dto : dtos){
+                dto.setIsActive(null);
+                dto.setIsDeleted(null);
+                dto.setCreatedBy(null);
+                dto.setUpdatedBy(null);
+                dto.setCreatedAt(null);
+                dto.setUpdatedAt(null);
+            }
+        }
+        return dtos;
+    }
+
+    public static <T extends BaseDto<Instant>> FilterResponse<T> configResponsePublic(FilterResponse<T> response){
+        if(Objects.nonNull(response) && Objects.nonNull(response.getData())){
+            for(T dto : response.getData()){
+                dto.setIsActive(null);
+                dto.setIsDeleted(null);
+                dto.setCreatedBy(null);
+                dto.setUpdatedBy(null);
+                dto.setCreatedAt(null);
+                dto.setUpdatedAt(null);
+            }
+        }
+        return response;
     }
 
 }
