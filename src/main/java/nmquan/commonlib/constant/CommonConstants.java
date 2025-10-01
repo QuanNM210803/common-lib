@@ -9,9 +9,9 @@ public class CommonConstants {
     public static final String MAP_DATA_KEY = "data";
     public static final Integer DEFAULT_PAGE_INDEX = 0;
     public static final Integer DEFAULT_PAGE_SIZE = 10;
-    public static final String DEFAULT_SORT_BY = "updatedAt";
+    public static final String DEFAULT_SORT_BY = "createdAt";
     public static final String DEFAULT_SORT_DIRECTION = "DESC";
-    public static final String FALLBACK_SORT_BY = "createdAt";
+    public static final String FALLBACK_SORT_BY = "updatedAt";
     public static final String ROLE_INTERNAL = "INTERNAL";
     public static final String ROLE_ANONYMOUS = "ANONYMOUS";
     public static final String ROLE_SYSTEM = "SYSTEM";
