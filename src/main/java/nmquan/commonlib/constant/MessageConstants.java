@@ -19,6 +19,12 @@ public class MessageConstants {
     public static final String UPDATE_FAIL="update.fail";
 
     /*
+    * Validation messages
+    * */
+    public static final String IDS_REQUIRE = "ids.require";
+    public static final String STATUS_ACTIVE_REQUIRE = "status.active.require";
+
+    /*
     * Other messages
     * */
     public static final String DELETE_SUCCESSFULLY="delete.successfully";
