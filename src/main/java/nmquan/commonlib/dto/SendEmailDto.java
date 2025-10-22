@@ -24,7 +24,9 @@ public class SendEmailDto {
 
     // For plain text email
     private String body;
+    private Long candidateInfoId;
     private Long orgId;
+    private Long emailTemplateId;
 
     // For template email
     private EmailTemplateEnum template;
