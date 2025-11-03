@@ -89,4 +89,6 @@ public class RestTemplateService {
         Response<Object> response = ObjectMapperUtils.convertToObject(formattedMessage,  new TypeReference<Response<Object>>() {});
         throw new AppException(response, statusCode);
     }
+
+    // add if needed
 }
