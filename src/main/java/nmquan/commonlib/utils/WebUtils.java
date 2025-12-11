@@ -1,6 +1,7 @@
 package nmquan.commonlib.utils;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import nmquan.commonlib.dto.BaseDto;
 import nmquan.commonlib.dto.Identifiable;
 import nmquan.commonlib.dto.response.FilterResponse;
@@ -16,6 +17,7 @@ import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class WebUtils {
     public static HttpServletRequest getCurrentRequest() {
         return ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
@@ -26,6 +28,7 @@ public class WebUtils {
         if (authentication == null || !authentication.isAuthenticated() || "anonymousUser".equals(authentication.getPrincipal())) {
             return null;
         }
+        log.info("Current User Principal: {}", authentication.getPrincipal());
         return (Map<String, Object>) authentication.getPrincipal();
     }
 
