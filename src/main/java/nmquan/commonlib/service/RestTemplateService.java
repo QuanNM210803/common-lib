@@ -2,6 +2,7 @@ package nmquan.commonlib.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import nmquan.commonlib.constant.CommonConstants;
 import nmquan.commonlib.dto.request.ObjectAndFileRequest;
 import nmquan.commonlib.dto.response.Response;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Objects;
 
+@Slf4j
 @Service
 public class RestTemplateService {
     @Autowired
@@ -50,6 +52,7 @@ public class RestTemplateService {
             );
             return Objects.requireNonNull(response.getBody());
         } catch (Exception exception) {
+            log.error("Error in GET method RestTemplate: {}", exception.getMessage());
             this.throwException(exception.getMessage());
             return null;
         }
@@ -82,6 +85,7 @@ public class RestTemplateService {
             );
             return Objects.requireNonNull(response.getBody());
         } catch (Exception exception) {
+            log.error("Error in POST method RestTemplate: {}", exception.getMessage());
             this.throwException(exception.getMessage());
             return null;
         }
@@ -126,6 +130,7 @@ public class RestTemplateService {
             );
             return Objects.requireNonNull(response.getBody());
         } catch (Exception exception) {
+            log.error("Error in UploadFile RestTemplate: {}", exception.getMessage());
             this.throwException(exception.getMessage());
             return null;
         }
@@ -176,6 +181,7 @@ public class RestTemplateService {
             );
             return Objects.requireNonNull(response.getBody());
         } catch (Exception exception) {
+            log.error("Error in UploadFilesWithObject RestTemplate: {}", exception.getMessage());
             this.throwException(exception.getMessage());
             return null;
         }
