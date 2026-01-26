@@ -9,10 +9,10 @@ import nmquan.commonlib.constant.CommonConstants;
 import nmquan.commonlib.utils.WebUtils;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -30,11 +30,14 @@ public class MdcFilter extends OncePerRequestFilter {
             String requestId = Optional.ofNullable(request.getHeader(CommonConstants.REQUEST_ID_KEY))
                     .orElse(UUID.randomUUID().toString());
             String username = WebUtils.getCurrentUsername();
+            if(ObjectUtils.isEmpty(username)){
+                username = CommonConstants.ROLE_ANONYMOUS;
+            }
 
             MDC.put("requestId", requestId);
             MDC.put("path", request.getRequestURI());
             MDC.put("method", request.getMethod());
-            MDC.put("username", Objects.requireNonNullElse(username, CommonConstants.ROLE_ANONYMOUS));
+            MDC.put("username", username);
 
             filterChain.doFilter(request, response);
         } finally {
