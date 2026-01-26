@@ -28,7 +28,6 @@ public class WebUtils {
         if (authentication == null || !authentication.isAuthenticated() || "anonymousUser".equals(authentication.getPrincipal())) {
             return null;
         }
-        log.info("Current User Principal: {}", authentication.getPrincipal());
         return (Map<String, Object>) authentication.getPrincipal();
     }
 
