@@ -2,6 +2,7 @@ package nmquan.commonlib.config;
 
 import nmquan.commonlib.constant.CommonConstants;
 import nmquan.commonlib.utils.JwtUtils;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +22,11 @@ public class RestTemplateConfig {
             HttpHeaders headers = request.getHeaders();
             String tokenInternal = JwtUtils.generateTokenInternal(SECRET_INTERNAL_KEY);
             headers.set("Authorization", tokenInternal);
+
+            String requestId = MDC.get(CommonConstants.REQUEST_ID_KEY);
+            if (requestId != null) {
+                headers.set(CommonConstants.REQUEST_ID_KEY, requestId);
+            }
             return execution.execute(request, body);
         });
 
