@@ -27,15 +27,16 @@ public class MdcFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         long start = System.currentTimeMillis();
         try {
-            String requestId = Optional.ofNullable(request.getHeader(CommonConstants.REQUEST_ID_KEY))
+            String requestId = Optional.ofNullable(request.getHeader(CommonConstants.REQUEST_ID_KEY_HEADER))
                     .orElse(UUID.randomUUID().toString());
             String username = WebUtils.getCurrentUsername();
             if(ObjectUtils.isEmpty(username)){
                 username = CommonConstants.ROLE_ANONYMOUS;
             }
 
-            MDC.put("requestId", requestId);
-            MDC.put("path", request.getRequestURI());
+            MDC.put(CommonConstants.REQUEST_ID_KEY, requestId);
+            MDC.put("path", request.getRequestURI() +
+                    (request.getQueryString() != null ? "?" + request.getQueryString() : ""));
             MDC.put("method", request.getMethod());
             MDC.put("username", username);
 

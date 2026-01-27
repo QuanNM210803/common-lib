@@ -25,7 +25,7 @@ public class RestTemplateConfig {
 
             String requestId = MDC.get(CommonConstants.REQUEST_ID_KEY);
             if (requestId != null) {
-                headers.set(CommonConstants.REQUEST_ID_KEY, requestId);
+                headers.set(CommonConstants.REQUEST_ID_KEY_HEADER, requestId);
             }
             return execution.execute(request, body);
         });

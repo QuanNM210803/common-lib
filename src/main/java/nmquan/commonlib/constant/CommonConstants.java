@@ -17,7 +17,8 @@ public class CommonConstants {
     public static final String ROLE_SYSTEM = "SYSTEM";
     public static final String INTERNAL = "internal";
     public static final String EXTERNAL = "external";
-    public static final String REQUEST_ID_KEY = "X-Request-Id";
+    public static final String REQUEST_ID_KEY_HEADER = "X-Request-Id";
+    public static final String REQUEST_ID_KEY = "requestId";
 
     public static class ActionLog {
         private ActionLog() {
